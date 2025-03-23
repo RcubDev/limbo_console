@@ -657,7 +657,7 @@ func _parse_command_line(p_line: String) -> PackedStringArray:
 ## will recursively expand aliases until no aliases are left
 func _expand_alias(p_argv: PackedStringArray) -> PackedStringArray:
 	var arg_duplicated = Array(p_argv)
-	var val: Array = []
+	var expanded_args: PackedStringArray = PackedStringArray([])
 	var max_depth: int = 1000
 	var current_depth: int = 0
 	while not arg_duplicated.is_empty() and current_depth != max_depth:
@@ -670,11 +670,11 @@ func _expand_alias(p_argv: PackedStringArray) -> PackedStringArray:
 			for item in alias:
 				arg_duplicated.insert(0, item)
 		else:
-			val.append(current)
+			expanded_args.append(current)
 	if current_depth >= max_depth:
 		push_error("LimboConsole: Max depth for alias reached. Is there a loop in your aliasing?")
 		return p_argv
-	return val
+	return expanded_args
 
 ## Converts arguments from String to types expected by the callable, and returns true if successful.
 ## The converted values are placed into a separate r_args array.
